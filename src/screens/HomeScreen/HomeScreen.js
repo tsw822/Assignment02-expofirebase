@@ -8,27 +8,26 @@ export default function HomeScreen(props) {
     const [entityText, setEntityText] = useState('')
     const [entities, setEntities] = useState([])
 
-    const entityRef = firebase.firestore().collection('entities')
     const userID = props.extraData.id
 
     useEffect(() => {
-        entityRef
-            .where("authorID", "==", userID)
-            .orderBy('createdAt', 'desc')
-            .onSnapshot(
-                querySnapshot => {
-                    const newEntities = []
-                    querySnapshot.forEach(doc => {
-                        const entity = doc.data()
-                        entity.id = doc.id
-                        newEntities.push(entity)
-                    });
-                    setEntities(newEntities)
-                },
-                error => {
-                    console.log(error)
-                }
-            )
+        firebase.database().ref('entities/').on("value", querySnapshot => {
+
+            const aNewEntities = []
+            let oEntities = querySnapshot.val();
+            console.log(oEntities);
+            Object.keys(oEntities).map((key) => {
+                const oEntity = oEntities[key];
+                console.log(oEntity);
+                oEntity.id = key;
+                aNewEntities.push(oEntity)
+            });
+            setEntities(aNewEntities)
+        },
+            error => {
+                console.log(error)
+            }
+        )
     }, [])
 
     const onAddButtonPress = () => {
@@ -39,8 +38,8 @@ export default function HomeScreen(props) {
                 authorID: userID,
                 createdAt: timestamp,
             };
-            entityRef
-                .add(data)
+            const entityID = new Date().toISOString().replace(".", "_");
+            firebase.database().ref('entities/' + entityID).set(data)
                 .then(_doc => {
                     setEntityText('')
                     Keyboard.dismiss()
@@ -51,7 +50,7 @@ export default function HomeScreen(props) {
         }
     }
 
-    const renderEntity = ({item, index}) => {
+    const renderEntity = ({ item, index }) => {
         return (
             <View style={styles.entityContainer}>
                 <Text style={styles.entityText}>
