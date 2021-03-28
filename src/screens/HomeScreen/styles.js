@@ -52,5 +52,31 @@ export default StyleSheet.create({
     entityText: {
         fontSize: 20,
         color: '#333333'
+    },
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        top: 0,
+    },
+    containerStyle: {
+        flex: 1,
+    },
+
+    scrollViewStyle: {
+        flex: 1,
+
+        padding: 15,
+
+        justifyContent: 'center',
+    },
+
+    headingStyle: {
+        fontSize: 30,
+
+        textAlign: 'center',
+
+        marginBottom: 40,
     }
+
 })
