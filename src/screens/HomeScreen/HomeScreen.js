@@ -17,14 +17,17 @@ function HomeScreen2({ navigation }) {
 
             const aNewEntities = []
             let oEntities = querySnapshot.val();
-            console.log(oEntities);
-            Object.keys(oEntities).map((key) => {
-                const oEntity = oEntities[key];
-                console.log(oEntity);
-                oEntity.id = key;
-                aNewEntities.push(oEntity)
-            });
-            setEntities(aNewEntities)
+            try{
+                Object.keys(oEntities).map((key) => {
+                    const oEntity = oEntities[key];
+                    console.log(oEntity);
+                    oEntity.id = key;
+                    aNewEntities.push(oEntity)
+                });
+                setEntities(aNewEntities)  
+            }catch(e){
+                console.log(e.toString())
+            }
         },
             error => {
                 console.log(error)
