@@ -41,17 +41,13 @@ function HomeScreen2({ navigation }) {
         <Card>
           <Card.Content>
             <Title>{item.title}</Title>
-            <Paragraph>Card content</Paragraph>
+            <Paragraph>{item.full_description}</Paragraph>
           </Card.Content>
-          <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+          <Card.Cover source={{ uri: item.featured_image }} />
           <Card.Actions>
-            <Button>Cancel</Button>
-            <Button>Ok</Button>
+            <Button>Edit</Button>
           </Card.Actions>
         </Card>
-        <Text style={styles.entityText}>
-          Rich was here {index}. {item.title}
-        </Text>
       </View>
     )
   }
