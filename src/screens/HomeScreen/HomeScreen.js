@@ -1,39 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, Keyboard, Text, ScrollView, View } from 'react-native'
-import styles from './styles';
-import { FAB } from 'react-native-paper';
-import { createStackNavigator } from '@react-navigation/stack';
-import FormBuilder from 'react-native-paper-form-builder';
-import { useForm } from 'react-hook-form';
-import { Button, Card, Title, Paragraph } from 'react-native-paper';
-import { firebase } from '../../firebase/config'
+import React, { useEffect, useState } from "react";
+import { FlatList, Keyboard, Text, ScrollView, View } from "react-native";
+import styles from "./styles";
+import { FAB } from "react-native-paper";
+import { createStackNavigator } from "@react-navigation/stack";
+import FormBuilder from "react-native-paper-form-builder";
+import { useForm } from "react-hook-form";
+import { Button, Card, Title, Paragraph } from "react-native-paper";
+import { firebase } from "../../firebase/config";
 
 function HomeScreen2({ navigation }) {
-
-  const [entities, setEntities] = useState([])
+  const [entities, setEntities] = useState([]);
 
   useEffect(() => {
-    firebase.database().ref('meals/').on("value", querySnapshot => {
-
-      const aNewEntities = []
-      let oEntities = querySnapshot.val();
-      try {
-        Object.keys(oEntities).map((key) => {
-          const oEntity = oEntities[key];
-          console.log(oEntity);
-          oEntity.id = key;
-          aNewEntities.push(oEntity)
-        });
-        setEntities(aNewEntities)
-      } catch (e) {
-        console.log(e.toString())
-      }
-    },
-      error => {
-        console.log(error)
-      }
-    )
-  }, [])
+    firebase
+      .database()
+      .ref("meals/")
+      .on(
+        "value",
+        (querySnapshot) => {
+          const aNewEntities = [];
+          let oEntities = querySnapshot.val();
+          try {
+            Object.keys(oEntities).map((key) => {
+              const oEntity = oEntities[key];
+              console.log(oEntity);
+              oEntity.id = key;
+              aNewEntities.push(oEntity);
+            });
+            setEntities(aNewEntities);
+          } catch (e) {
+            console.log(e.toString());
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }, []);
 
   const renderEntity = ({ item, index }) => {
     return (
@@ -49,12 +52,12 @@ function HomeScreen2({ navigation }) {
           </Card.Actions>
         </Card>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
-      { entities && (
+      {entities && (
         <View style={styles.listContainer}>
           <FlatList
             data={entities}
@@ -68,25 +71,22 @@ function HomeScreen2({ navigation }) {
         style={styles.fab}
         large
         icon="plus"
-        onPress={() => navigation.navigate('Details')}
+        onPress={() => navigation.navigate("Details")}
       />
-
     </View>
-  )
+  );
 }
 
 function DetailsScreen({ navigation }) {
-
   const form = useForm({
     defaultValues: {
-      email: '',
+      email: "",
 
-      password: '',
+      password: "",
     },
 
-    mode: 'onChange',
+    mode: "onChange",
   });
-
 
   return (
     <View style={styles.containerStyle}>
@@ -97,33 +97,33 @@ function DetailsScreen({ navigation }) {
           form={form}
           formConfigArray={[
             {
-              type: 'input',
+              type: "input",
 
-              name: 'title',
+              name: "title",
 
-              label: 'Title',
+              label: "Title",
 
               rules: {
                 required: {
                   value: true,
 
-                  message: 'Title is required',
+                  message: "Title is required",
                 },
               },
 
               textInputProps: {
-                keyboardType: 'default',
+                keyboardType: "default",
 
-                autoCapitalize: 'none',
+                autoCapitalize: "none",
               },
             },
 
             {
-              type: 'input',
+              type: "input",
 
-              name: 'meta_description',
+              name: "meta_description",
 
-              label: 'Meta Description',
+              label: "Meta Description",
 
               rules: {
                 required: {
@@ -133,15 +133,15 @@ function DetailsScreen({ navigation }) {
 
               textInputProps: {
                 multiline: true,
-                numberOfLines: 4
+                numberOfLines: 4,
               },
             },
             {
-              type: 'input',
+              type: "input",
 
-              name: 'full_description',
+              name: "full_description",
 
-              label: 'Full Description',
+              label: "Full Description",
 
               rules: {
                 required: {
@@ -151,15 +151,15 @@ function DetailsScreen({ navigation }) {
 
               textInputProps: {
                 multiline: true,
-                numberOfLines: 4
+                numberOfLines: 4,
               },
             },
             {
-              type: 'input',
+              type: "input",
 
-              name: 'featured_image',
+              name: "featured_image",
 
-              label: 'Featured Image',
+              label: "Featured Image",
 
               rules: {
                 required: {
@@ -168,34 +168,87 @@ function DetailsScreen({ navigation }) {
               },
 
               textInputProps: {
-                keyboardType: 'default',
+                keyboardType: "default",
 
-                autoCapitalize: 'none',
+                autoCapitalize: "none",
               },
             },
+            {
+              type: "input",
 
-          ]}>
+              name: "price",
+
+              label: "Price",
+
+              rules: {
+                required: {
+                  value: false,
+                },
+              },
+
+              textInputProps: {
+                keyboardType: "default",
+                autoCapitalize: "none",
+              },
+            },
+            {
+              type: "input",
+
+              name: "location",
+
+              label: "Location",
+
+              rules: {
+                required: {
+                  value: false,
+                },
+              },
+
+              textInputProps: {
+                keyboardType: "default",
+                autoCapitalize: "words",
+              },
+            },
+            {
+              type: "input",
+
+              name: "date",
+
+              label: "Event date",
+
+              rules: {
+                required: {
+                  value: false,
+                },
+              },
+            },
+          ]}
+        >
           <Button
-            mode={'contained'}
+            mode={"contained"}
             onPress={form.handleSubmit((data) => {
-              console.log('form data', data);
+              console.log("form data", data);
               const timestamp = firebase.firestore.FieldValue.serverTimestamp();
               const entityID = new Date().toISOString().replace(".", "_");
-              firebase.database().ref('meals/' + entityID).set(data)
-                .then(_doc => {
+              firebase
+                .database()
+                .ref("meals/" + entityID)
+                .set(data)
+                .then((_doc) => {
                   Keyboard.dismiss();
                   navigation.popToTop();
                 })
                 .catch((error) => {
-                  alert(error)
+                  alert(error);
                 });
-
-            })}>
+            })}
+          >
             Submit
-            </Button>
+          </Button>
         </FormBuilder>
       </ScrollView>
-    </View>);
+    </View>
+  );
 }
 
 const Stack = createStackNavigator();
